@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>刮刮乐</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .containter{
+            width: 100%;
+            height: 200px;
+            margin-top: 50px;
+
+        }
+        body{
+            background-color: #fe771d;
+            color: #fff;
+        }
+        button{
+            width: 150px;
+            height: 40px;
+            text-align: center;
+            border-radius: 6px;
+            color: #fff;
+            background-color: #ab0008;
+            font-size: 16px;
+            font-weight: 800;
+            border: none;
+        }
+        .rule{
+            margin: 100px 5px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        img{
+            width: 200px;
+            margin-right: 20px;
+        }
+        .rule ul li{
+            list-style: none;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <canvas id="c"></canvas>
+    </div>
+    <div style="text-align:center;">
+        <button onclick="window.location.reload()">再试一次</button>
+    </div>
+    <div class="rule">
+        <img src="img/logo.png" />
+        <div>
+            <h3>奖项设置</h3>
+            <ul>
+                <li>一等奖：来它一个亿</li>
+                <li>二等奖：价值2000万的别墅</li>
+                <li>三等奖：毛里求斯豪华单人游</li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var cv=document.getElementById("c");
+        var ctx=cv.getContext("2d");
+        
+        cv.width=document.body.clientWidth;
+        cv.height=160;
+
+        var prizeArr=['img/11.jpg','img/2.jpg','img/33.jpg','img/s.jpg'];
+        var prize=prizeArr[Math.floor(Math.random()*4)];
+
+        load();
+        function load(){
+            cv.style.backgroundImage="url("+prize+")";
+            cv.style.backgroundRepeat="no-repeat";
+            cv.style.backgroundPosition="center";
+
+            ctx.fillStyle="silver";
+            ctx.fillRect(0,0,cv.width,cv.height);
+
+            // 判断是否点击
+            var isStart=false;
+            function eventDown(e){
+                e.preventDefault();
+                isStart=true;
+            };
+            function eventUp(e){
+                e.preventDefault();
+                isStart=false;
+            };
+            function eventMove(e){
+                e.preventDefault();
+                ctx.globalCompositeOperation="destination-out";
+
+                if(isStart){
+                    // 为了兼容
+                    if(e.changedTouches){
+                        e=e.changedTouches[e.changedTouches.length-1];
+
+                    }
+                    ctx.beginPath();
+                    var x = e.clientX-cv.offsetLeft;
+                    var y = e.clientY-cv.offsetTop;
+                    ctx.arc(x,y,10,0,Math.PI*2);
+                    ctx.fill();
+                }
+            };
+
+            cv.addEventListener('touchstart',eventDown);
+            cv.addEventListener('touchend',eventUp);
+            cv.addEventListener('touchmove',eventMove);
+            cv.addEventListener('mousedown',eventDown);
+            cv.addEventListener('mouseup',eventUp);
+            cv.addEventListener('mousemove',eventMove);
+
+
+
+        }
+    </script>
+</body>
+</html>
